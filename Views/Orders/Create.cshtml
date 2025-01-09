@@ -1,0 +1,23 @@
+﻿@model LabASPNET.Models.Order
+
+<h2>Create Order</h2>
+
+<form method="post" action="/Orders/Create">
+	<div class="mb-3">
+		<label for="User Id" class="form-label">User  ID</label>
+		<input type="number" class="form-control" id="User Id" name="User Id" required>
+	</div>
+	<div class="mb-3">
+		<label for="ProductId" class="form-label">Product ID</label>
+		<input type="number" class="form-control" id="ProductId" name="ProductId" required>
+	</div>
+	<div class="mb-3">
+		<label for="Quantity" class="form-label">Quantity</label>
+		<input type="number" class="form-control" id="Quantity" name="Quantity" required>
+	</div>
+	<div class="mb-3">
+		<label for="OrderDate" class="form-label">Order Date</label>
+		<input type="date" class="form-control" id="OrderDate" name="OrderDate" required>
+	</div>
+	<button type="submit" class="btn btn-primary">Create</button>
+</form>

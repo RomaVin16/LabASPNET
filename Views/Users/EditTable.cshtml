@@ -1,0 +1,43 @@
+﻿@model List<LabASPNET.Models.User>
+
+<h2>Edit Users Table</h2>
+
+<form asp-action="EditTable" method="post">
+	<table class="table table-bordered">
+		<thead>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Password</th>
+			<th>Registration Date</th>
+		</tr>
+		</thead>
+		<tbody>
+		@for (var i = 0; i < Model.Count; i++)
+		{
+			<tr>
+				<td>
+					<input asp-for="@Model[i].UserId" name="users[@i].UserId" type="hidden" />
+					@Model[i].UserId
+				</td>
+				<td>
+					<input asp-for="@Model[i].Name" name="users[@i].Name" class="form-control" value="@Model[i].Name" />
+				</td>
+				<td>
+					<input asp-for="@Model[i].Email" name="users[@i].Email" class="form-control" value="@Model[i].Email" />
+				</td>
+				<td>
+					<input asp-for="@Model[i].Password" name="users[@i].Password" type="password" class="form-control" value="@Model[i].Password" />
+				</td>
+				<td>
+					<input asp-for="@Model[i].RegistrationDate" name="users[@i].RegistrationDate" type="date" class="form-control" value="@Model[i].RegistrationDate.ToString("yyyy-MM-dd")" />
+				</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+
+	<button type="submit" class="btn btn-primary">Save Changes</button>
+	<a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
