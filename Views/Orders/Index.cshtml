@@ -1,53 +1,52 @@
 ﻿@model IEnumerable<LabASPNET.Models.Order>
 
-@{
-	ViewData["Title"] = "Список заказов";
-}
-
 <h2>Список заказов</h2>
 
-<p>
-	<a asp-action="Create" class="btn btn-primary">Создать новый заказ</a>
-</p>
-
-<form method="post" asp-action="EditTable" asp-controller="Orders">
+<form method="post" action="@Url.Action("EditOrder", "Orders")">
+	@Html.AntiForgeryToken()
 	<table class="table">
 		<thead>
 		<tr>
-			<th>ID заказа</th>
-			<th>ID пользователя</th>
-			<th>ID продукта</th>
-			<th>Количество</th>
-			<th>Дата заказа</th>
-			<th>Действия</th>
+			<th>OrderId</th>
+			<th>UserId</th>
+			<th>ProductId</th>
+			<th>Quantity</th>
+			<th>OrderDate</th>
+			<th>Actions</th>
 		</tr>
 		</thead>
 		<tbody>
-		@foreach (var order in Model)
+		@for (var i = 0; i < Model.Count(); i++)
 		{
 			<tr>
 				<td>
-					@order.OrderId
-					<input type="hidden" name="orders[@order.OrderId].OrderId" value="@order.OrderId" />
+					@Model.ElementAt(i).OrderId
+					<input type="hidden" name="orders[@i].OrderId" value="@Model.ElementAt(i).OrderId" />
 				</td>
-				<td><input type="number" name="orders[@order.OrderId].UserId" value="@order.UserId" class="form-control" /></td>
-				<td><input type="number" name="orders[@order.OrderId].ProductId" value="@order.ProductId" class="form-control" /></td>
-				<td><input type="number" name="orders[@order.OrderId].Quantity" value="@order.Quantity" class="form-control" /></td>
-				<td><input type="date" name="orders[@order.OrderId].OrderDate" value="@order.OrderDate.ToString("yyyy-MM-dd")" class="form-control" /></td>
 				<td>
-					<form method="post" asp-action="DeleteOrder" asp-route-id="@order.OrderId">
-						<button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+					<input type="number" name="orders[@i].UserId" value="@Model.ElementAt(i).UserId" class="form-control" />
+				</td>
+				<td>
+					<input type="number" name="orders[@i].ProductId" value="@Model.ElementAt(i).ProductId" class="form-control" />
+				</td>
+				<td>
+					<input type="number" name="orders[@i].Quantity" value="@Model.ElementAt(i).Quantity" class="form-control" />
+				</td>
+				<td>
+					<input type="date" name="orders[@i].OrderDate" value="@Model.ElementAt(i).OrderDate.ToString("yyyy-MM-dd")" class="form-control" />
+				</td>
+				<td>
+					<form method="post" action="@Url.Action("DeleteOrder", "Orders", new { id = Model.ElementAt(i).OrderId })" style="display:inline;">
+						@Html.AntiForgeryToken()
+						<button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Удалить</button>
 					</form>
 				</td>
 			</tr>
 		}
 		</tbody>
-		<tfoot>
-		<tr>
-			<td colspan="6">
-				<button type="submit" class="btn btn-success btn-sm float-right">Сохранить изменения</button>
-			</td>
-		</tr>
-		</tfoot>
-	</table>
+		</table>
+	<button type="submit" class="btn btn-primary">Сохранить изменения</button>
 </form>
+
+<a href="@Url.Action("Create", "Orders")" class="btn btn-primary">Создать новый заказ</a>
+

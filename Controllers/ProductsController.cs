@@ -40,57 +40,48 @@ namespace LabASPNET.Controllers
             return View(product);
         }
 
-        [HttpGet("EditProduct/{id}")]
-        public IActionResult EditProduct(int id)
+        [HttpPost("EditProduct")]
+        public IActionResult EditProduct(List<Product> products)
         {
-            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+var dbProducts = _context.Products.ToList();
 
-            return View(product); 
+for (var i = 0; i < products.Count; i++)
+{
+	var product = products[i];
+    var dbProduct = dbProducts[i];
+
+    dbProduct.Name = product.Name;
+    dbProduct.Price = product.Price;
+    dbProduct.Description = product.Description;
+}
+
+_context.SaveChanges();
+
+return RedirectToAction("Index");
         }
 
-        [HttpPost("EditProduct/{id}")]
-        public IActionResult EditProduct(int id, Product product)
-        {
-            if (id != product.ProductId)
-            {
-                return BadRequest();
-            }
+		[HttpPost("DeleteProduct/{id}")]
+		public IActionResult DeleteProduct(int id)
+		{
+			var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
 
-            var dbProduct = _context.Products.FirstOrDefault(p => p.ProductId == id);
-            if (dbProduct == null)
-            {
-                return NotFound();
-            }
+			if (product == null)
+			{
+				return NotFound(); 
+			}
 
-            dbProduct.Name = product.Name;
-            dbProduct.Price = product.Price;
-            dbProduct.Description = product.Description;
+			var orders = _context.Orders.Where(o => o.ProductId == id).ToList();
 
-            _context.SaveChanges();
-            return RedirectToAction("Index");
-        }
+			if (orders.Any())
+			{
+				_context.Orders.RemoveRange(orders);
+			}
 
-        [HttpPost("Delete/{id}")]
-        public IActionResult Delete(int id)
-        {
-            var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+			_context.Products.Remove(product); 
+			_context.SaveChanges(); 
 
-            var orders = _context.Orders.Where(o => o.ProductId == id).ToList();
-            _context.Orders.RemoveRange(orders);
+			return RedirectToAction("Index");
+		}
 
-            _context.Products.Remove(product);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index");
-        }
-
-    }
+	}
 }

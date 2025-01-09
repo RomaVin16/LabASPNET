@@ -1,29 +1,43 @@
 ﻿@model List<LabASPNET.Models.User>
 
-<table>
-	<thead>
-	<tr>
-		<th>Email</th>
-		<th>Name</th>
-		<th>Registration Date</th>
-		<th>Actions</th>
-	</tr>
-	</thead>
-	<tbody>
-	@foreach (var user in Model)
-	{
+<h2>Список пользователей</h2>
+
+<form method="post" action="@Url.Action("EditTable", "Users")">
+	@Html.AntiForgeryToken()
+	<table class="table">
+		<thead>
 		<tr>
-			<td>@user.Name</td>
-			<td>@user.Email</td>
-			<td>@user.RegistrationDate.ToString("yyyy-MM-dd")</td>
-			<td>
-	
-				<form method="post" action="@Url.Action("Delete", "Users", new { id = user.UserId })"
-				      onsubmit="return confirm('Are you sure you want to delete this user?');">
-					<button type="submit" class="btn btn-danger">Delete</button>
-				</form>
-			</td>
+			<th>UserId</th>
+				<th>Name</th>
+			<th>Email</th>
+			<th>RegistrationDate</th>
+			<th>Actions</th>
 		</tr>
-	}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+		@for (var i = 0; i < Model.Count; i++)
+		{
+			<tr>
+				<td>@Model.ElementAt(i).UserId</td>
+				<td>
+					<input type="text" name="users[@i].Name" value="@Model[i].Name" class="form-control"/>
+				</td>
+				<td>
+					<input type="email" name="users[@i].Email" value="@Model[i].Email" class="form-control"/>
+				</td>
+			<td>
+					<input type="date" name="users[@i].RegistrationDate" value="@Model[i].RegistrationDate.ToString("yyyy-MM-dd")" class="form-control"/>
+				</td>
+				<td>
+					<form method="post" action="@Url.Action("Delete", "Users", new { id = Model.ElementAt(i).UserId })" style="display:inline;">
+						@Html.AntiForgeryToken()
+						<button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this product?');">Удалить</button></form>
+				</td>
+			</tr>
+		}
+		</tbody>
+	</table>
+	<button type="submit" class="btn btn-primary">Сохранить изменения</button>
+</form>
+
+<a href="@Url.Action("Create", "Users")" class="btn btn-primary">Создать нового пользователя</a>

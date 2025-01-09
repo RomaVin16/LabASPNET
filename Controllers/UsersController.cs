@@ -41,18 +41,9 @@ namespace LabASPNET.Controllers
             return View(user);
         }
 
-        [HttpGet("EditTable")]
-        public IActionResult EditTable()
-        {
-            var users = _context.Users.ToList();
-
-            return View(users);
-        }
-
         [HttpPost("EditTable")]
         public IActionResult EditTable(List<User> users)
         {
-
             var dbUsers = _context.Users.ToList();
 
             for (var i = 0; i < users.Count; i++)
@@ -64,7 +55,6 @@ namespace LabASPNET.Controllers
                 dbUser.Name = user.Name;
                 dbUser.RegistrationDate = user.RegistrationDate;
 
-
                 if (user.RegistrationDate.Kind == DateTimeKind.Unspecified)
                 {
                     dbUser.RegistrationDate = DateTime.SpecifyKind(user.RegistrationDate, DateTimeKind.Utc);
@@ -73,7 +63,6 @@ namespace LabASPNET.Controllers
                 {
                     dbUser.RegistrationDate = user.RegistrationDate.ToUniversalTime();
                 }
-
             }
 
             _context.SaveChanges();
